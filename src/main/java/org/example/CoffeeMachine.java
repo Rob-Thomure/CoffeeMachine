@@ -9,8 +9,38 @@ public class CoffeeMachine {
     public final static int GRAMS_OF_COFFEE_BEANS_PER_CUP = 15;
 
     public static void main(String[] args) {
-        int cupsCoffee = askHowManyCupsCoffeeNeeded();
-        printAmountOfIngredientsNeeded(cupsCoffee);
+        estimateNumberOfServings();
+    }
+
+    public static void estimateNumberOfServings() {
+        System.out.println("Write how many ml of water the coffee machine has:");
+        int water = scanner.nextInt();
+        System.out.println("Write how many ml of milk the coffee machine has:");
+        int milk = scanner.nextInt();
+        System.out.println("Write how many grams of coffee beans the coffee machine has:");
+        int coffeeBeans = scanner.nextInt();
+        int cupsNeeded = askHowManyCupsCoffeeNeeded();
+        int maximumCupsMade = calculateMaxNumCups(water, milk, coffeeBeans);
+        printResults(cupsNeeded, maximumCupsMade);
+    }
+
+    public static void printResults(int cupsNeeded, int maximumCupsMade) {
+        if (cupsNeeded == maximumCupsMade) {
+            System.out.println("Yes, I can make that amount of coffee");
+        } else if (maximumCupsMade > cupsNeeded) {
+            System.out.printf("Yes, I can make that amount of coffee (and even %d more than that)",
+                    maximumCupsMade - cupsNeeded);
+        } else {
+            System.out.printf("No, I can make only %d cup(s) of coffee", maximumCupsMade);
+        }
+    }
+
+    public static int calculateMaxNumCups(int water, int milk, int coffeeBeans) {
+        int cupsForWater = water / ML_OF_WATER_PER_CUP;
+        int cupsForMilk = milk / ML_OF_MILK_PER_CUP;
+        int cupsForBeans = coffeeBeans / GRAMS_OF_COFFEE_BEANS_PER_CUP;
+        int maximumCups = Math.min(cupsForWater, cupsForMilk);
+        return Math.min(maximumCups, cupsForBeans);
     }
 
     public static void printAmountOfIngredientsNeeded(int cups) {
