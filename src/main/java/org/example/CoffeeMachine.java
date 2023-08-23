@@ -14,27 +14,33 @@ public class CoffeeMachine {
     public static int money = 550;
 
     public static void main(String[] args) {
-        printInventory();
         chooseAction();
-        printInventory();
     }
 
     public static void chooseAction() {
-        System.out.println("\nWrite action (buy, fill, take):");
-        String action = scanner.nextLine();
-        switch (action) {
-            case "buy":
-                chooseCoffeeType();
-                break;
-            case "fill":
-                fillCoffeeMachine();
-                break;
-            case "take":
-                takeMoney();
-                break;
-            default:
-                System.out.println("Invalid choice");
-                break;
+        while (true) {
+            System.out.println("Write action (buy, fill, take, remaining, exit):");
+            String action = scanner.nextLine();
+            System.out.println();
+            switch (action) {
+                case "buy":
+                    chooseCoffeeType();
+                    break;
+                case "fill":
+                    fillCoffeeMachine();
+                    break;
+                case "take":
+                    takeMoney();
+                    break;
+                case "remaining":
+                    printInventory();
+                    break;
+                case "exit":
+                    return;
+                default:
+                    System.out.println("Invalid choice");
+                    break;
+            }
         }
     }
 
@@ -56,45 +62,42 @@ public class CoffeeMachine {
     }
 
     public static void chooseCoffeeType() {
-        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
-        int coffeeType = scanner.nextInt();
-        System.out.println();
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
+        String coffeeType = scanner.nextLine();
         switch (coffeeType) {
-            case 1:
+            case "1":
                 buyEspresso();
                 break;
-            case 2:
+            case "2":
                 buyLatte();
                 break;
-            case 3:
+            case "3":
                 buyCappuccino();
                 break;
+            case "back":
+                return;
             default:
                 System.out.println("Invalid choice");
                 break;
         }
     }
 
+    // TODO model after buyCappuccino()
     public static void buyEspresso() {
         final int ML_OF_WATER_PER_CUP = 250;
+        final int ML_OF_MILK_PER_CUP = 0;
         final int GRAMS_OF_COFFEE_BEANS_PER_CUP = 16;
         final int PRICE_PER_CUP = 4;
-        mlOfWater -= ML_OF_WATER_PER_CUP;
-        gramsOfCoffeeBeans -= GRAMS_OF_COFFEE_BEANS_PER_CUP;
-        disposableCups--;
-        money += PRICE_PER_CUP;
+        purchaseCup(ML_OF_WATER_PER_CUP, ML_OF_MILK_PER_CUP, GRAMS_OF_COFFEE_BEANS_PER_CUP, PRICE_PER_CUP);
     }
 
+    // TODO model after buyCappuccino()
     public static void buyLatte() {
         final int ML_OF_WATER_PER_CUP = 350;
         final int ML_OF_MILK_PER_CUP = 75;
         final int GRAMS_OF_COFFEE_BEANS_PER_CUP = 20;
         final int PRICE_PER_CUP = 7;
-        mlOfWater -= ML_OF_WATER_PER_CUP;
-        mlOfMilk -= ML_OF_MILK_PER_CUP;
-        gramsOfCoffeeBeans -= GRAMS_OF_COFFEE_BEANS_PER_CUP;
-        disposableCups--;
-        money += PRICE_PER_CUP;
+        purchaseCup(ML_OF_WATER_PER_CUP, ML_OF_MILK_PER_CUP, GRAMS_OF_COFFEE_BEANS_PER_CUP, PRICE_PER_CUP);
     }
 
     public static void buyCappuccino() {
@@ -102,16 +105,32 @@ public class CoffeeMachine {
         final int ML_OF_MILK_PER_CUP = 100;
         final int GRAMS_OF_COFFEE_BEANS_PER_CUP = 12;
         final int PRICE_PER_CUP = 6;
-        mlOfWater -= ML_OF_WATER_PER_CUP;
-        mlOfMilk -= ML_OF_MILK_PER_CUP;
-        gramsOfCoffeeBeans -= GRAMS_OF_COFFEE_BEANS_PER_CUP;
-        disposableCups--;
-        money += PRICE_PER_CUP;
+        purchaseCup(ML_OF_WATER_PER_CUP, ML_OF_MILK_PER_CUP, GRAMS_OF_COFFEE_BEANS_PER_CUP, PRICE_PER_CUP);
+    }
+
+    public static void purchaseCup(int ML_OF_WATER_PER_CUP, int ML_OF_MILK_PER_CUP,
+                                   int GRAMS_OF_COFFEE_BEANS_PER_CUP, int PRICE_PER_CUP) {
+        if (mlOfWater < ML_OF_WATER_PER_CUP) {
+            System.out.println("Sorry, not enough water!\n");
+        } else if (mlOfMilk < ML_OF_MILK_PER_CUP) {
+            System.out.println("Sorry, not enough milk\n");
+        } else if (gramsOfCoffeeBeans < GRAMS_OF_COFFEE_BEANS_PER_CUP) {
+            System.out.println("Sorry, not enough coffee beans\n");
+        } else if (disposableCups < 1) {
+            System.out.println("Sorry, not enough cups\n");
+        } else {
+            System.out.println("I have enough resources, making you a coffee!\n");
+            mlOfWater -= ML_OF_WATER_PER_CUP;
+            mlOfMilk -= ML_OF_MILK_PER_CUP;
+            gramsOfCoffeeBeans -= GRAMS_OF_COFFEE_BEANS_PER_CUP;
+            disposableCups--;
+            money += PRICE_PER_CUP;
+        }
     }
 
     public static void printInventory() {
         System.out.printf("The coffee machine has:%n%d ml of water%n%d ml of milk%n%d g of coffee beans%n%d " +
-                "disposable cups%n$%d of money%n", mlOfWater, mlOfMilk, gramsOfCoffeeBeans, disposableCups, money);
+                "disposable cups%n$%d of money%n%n", mlOfWater, mlOfMilk, gramsOfCoffeeBeans, disposableCups, money);
     }
 
     public static void estimateNumberOfServings() {
