@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.Map;
 import java.util.Scanner;
 
 enum CurrentState {
@@ -27,17 +28,12 @@ public class CoffeeMachine {
         switch (this.currentSate) {
             case CHOOSING_COFFEE_VARIANT:
                 int coffeeType = Integer.parseInt(input);
-                switch (coffeeType) {
-                    case 1:
-                        buyEspresso();
-                        break;
-                    case 2:
-                        buyLatte();
-                        break;
-                    case 3:
-                        buyCappuccino();
-                        break;
-                }
+                Coffee coffee = new CoffeeFactory().createCoffee(coffeeType);
+                Map<String, Integer> ingredients = coffee.getIngredients();
+                purchaseCup(ingredients.get("water"),
+                        ingredients.get("milk"),
+                        ingredients.get("coffeeBeans"),
+                        ingredients.get("cost"));
                 break;
             case FILLING_COFFEE_MACHINE:
                 fillMachine(input);
@@ -49,30 +45,6 @@ public class CoffeeMachine {
                 printInventory();
                 break;
         }
-    }
-
-    private void buyEspresso() {
-        final int ML_OF_WATER_PER_CUP = 250;
-        final int ML_OF_MILK_PER_CUP = 0;
-        final int GRAMS_OF_COFFEE_BEANS_PER_CUP = 16;
-        final int PRICE_PER_CUP = 4;
-        purchaseCup(ML_OF_WATER_PER_CUP, ML_OF_MILK_PER_CUP, GRAMS_OF_COFFEE_BEANS_PER_CUP, PRICE_PER_CUP);
-    }
-
-    private void buyLatte() {
-        final int ML_OF_WATER_PER_CUP = 350;
-        final int ML_OF_MILK_PER_CUP = 75;
-        final int GRAMS_OF_COFFEE_BEANS_PER_CUP = 20;
-        final int PRICE_PER_CUP = 7;
-        purchaseCup(ML_OF_WATER_PER_CUP, ML_OF_MILK_PER_CUP, GRAMS_OF_COFFEE_BEANS_PER_CUP, PRICE_PER_CUP);
-    }
-
-    private void buyCappuccino() {
-        final int ML_OF_WATER_PER_CUP = 200;
-        final int ML_OF_MILK_PER_CUP = 100;
-        final int GRAMS_OF_COFFEE_BEANS_PER_CUP = 12;
-        final int PRICE_PER_CUP = 6;
-        purchaseCup(ML_OF_WATER_PER_CUP, ML_OF_MILK_PER_CUP, GRAMS_OF_COFFEE_BEANS_PER_CUP, PRICE_PER_CUP);
     }
 
     private void purchaseCup(int ML_OF_WATER_PER_CUP, int ML_OF_MILK_PER_CUP,
